@@ -24,21 +24,21 @@ export default {
       VALID: 'sentença válida:',
       aritimetic:  'operador aritmético',
       sentencaInvalida: 'ERRO => sentença inválida',
-      simboloInvalido: 'ERRO => símbolo(s) inválido(s)',
+      simbuloInvalido: 'ERRO => símbolo(s) inválido(s)',
       aritimeticOperators: ['+','-','/','*'],
-      endSentence: ['$','+','-','/','*',' '],
+      controlCharacters: ['$',' '],
       tabelaT:[
-        [ 10, 10,  6,  9, 10, 10 ],
-        [ 10, 10, 10,  9, 10, 10 ],
-        [  3, 10,  0,  7, 10, 10 ],
-        [ 10,  4, 10, 10, 10, 10 ],
-        [  5, 10, 10, 10, 10, 10 ],
-        [ 10,  2, 10, 10, 10, 10 ],
-        [ 10, 10,  0,  7, 10, 10 ],
-        [ 10, 10, 10, 10,  1, 10 ],
-        [ 10, 10, 10,  7, 10, 10 ],
-        [ 10, 10, 10, 10,  8, 10 ],
-        [ 10, 10, 10, 10, 10, 10 ],
+        [ 11, 11,  6,  9, 11, 11],
+        [ 11, 11, 11,  9, 11, 11 ],
+        [  3, 11,  0,  7, 11, 11 ],
+        [ 11,  4, 11, 11, 11, 11 ],
+        [  5, 11, 11, 11, 11, 11 ],
+        [ 11,  2, 11, 11, 11, 11 ],
+        [ 11, 11,  0,  7, 11, 11 ],
+        [ 11, 11, 11, 11,  1, 11 ],
+        [ 11, 11, 11,  7, 11, 11 ],
+        [ 11, 11, 11, 11,  8, 11 ],
+        [ 11, 11, 11, 11, 11, 11 ],
       ],
       EF: [1,1,0,0,0,0,0,0,0,0,0],
     };
@@ -53,14 +53,15 @@ export default {
       else return 5
     },
     getSentencas: function (token){
+
       let sentencas = [];
       let sentenca = '';
       for (let i = 0; i < token.length; i++) {
-        if(!this.endSentence.includes(token.charAt(i))){
+        if(!this.controlCharacters.includes(token.charAt(i)) && !this.aritimeticOperators.includes(token.charAt(i))){
           sentenca +=  token[i];
         }else{
           sentenca +=  token[i];
-          sentenca += '$';
+          sentenca+= '$';
           sentencas.push(sentenca);
           sentenca = ''; 
         }
@@ -68,33 +69,79 @@ export default {
       return sentencas;
     },
     inAlfhabeth: function(sentenca){
-          
       for(let i = 0; i < sentenca.length - 1 ; i++  ){
         if (!this.alfabeto.includes(sentenca[i])) {
-          // resposta = `Sentenca Invalida - Simbulo Invalido: ${sentenca}`
           return false;
         }
       }
       return true;
     },
-    
+    inAritimeticOperators: function(sentenca){
+      for(let i = 0; i < sentenca.length - 1 ; i++  ){
+        if (!this.aritimeticOperators.includes(sentenca[i])) {
+          return false;
+        }
+      }
+      return true;
+    },
+    inControlCharacters: function(sentenca){
+      for(let i = 0; i < sentenca.length - 1 ; i++  ){
+        if (!this.controlCharacters.includes(sentenca[i])) {
+          return false;
+        }
+      }
+      return true;
+    },
+
     main:function(){
       console.clear();
-      console.log(this.tabelaT[2][3])
       const input = document.getElementById('input');
       const results = document.getElementById('results');
       let toke = input.value;
+      let estado = 2;
       
       const token = toke + "$";
       const sentencas = this.getSentencas(token);
       console.log(sentencas);
+
       
       for (const element of sentencas) {
+        console.log(element.length);
+        if(!this.inAlfhabeth(element)){
+          for (let i = 0; i < element.length-1; i++) {
+            if(element[i] == '/' || element[i] == '*' || element[i] == '+' || element[i]=='-'){
+              results.value += `${this.aritimetic}${element[i]}\n`
+            }
+            else{
+              if (element[i] != ' ') {
+                results.value += `${this.simbuloInvalido}${element[i]}\n`
+              }
+            }
+          }
+        }
+        else{
+          for (let j = 0; j < element.length-1; j++) {
+            let indice = this.indiceSimbolo(element[j]);
+            estado = this.tabelaT[estado][indice];
+          }
+          if (this.EF[estado] == 1) {
+            results.value += `${this.VALID}${element}\n`
+          }
+          else{
+            results.value += `${this.sentencaInvalida}${element}\n`
+          }
+        }
+      }
+    
+      
+      
+      /*for (const element of sentencas) {
         if(!this.inAlfhabeth(element)){
           results.value += `ERRO - Simbolo Invalido: ${element}\n`
         }
-      }
+      }*/
       // console.log(retornos)
+
       // results.value += token
     },
     clear:function(){
@@ -102,6 +149,7 @@ export default {
       document.getElementById('results').value = '';
     },
   },
+
 }
 </script>
 
