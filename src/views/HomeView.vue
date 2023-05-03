@@ -44,8 +44,15 @@ export default {
     };
   },
   methods:{
+    indiceSimbolo: function (simbolo) {
+      if(simbolo == 'a') return 0
+      else if(simbolo == 'b') return 1
+      else if(simbolo == 'c') return 2
+      else if(simbolo == 'd') return 3
+      else if(simbolo == 'e') return 4
+      else return 5
+    },
     getSentencas: function (token){
-
       let sentencas = [];
       let sentenca = '';
       for (let i = 0; i < token.length; i++) {
@@ -69,7 +76,6 @@ export default {
         }
       }
       return true;
-      
     },
     
     main:function(){
@@ -95,34 +101,11 @@ export default {
       document.getElementById('input').value = '';
       document.getElementById('results').value = '';
     },
-    /*int indiceSimbolo(char simbolo){
-    if(simbolo == 'a')
-        return 0;
-    else{
-        if(simbolo == 'b')
-            return 1;
-        else{
-            if(simbolo == 'c')
-                return 2;
-            else{
-                if(simbolo == 'd')
-                    return 3;
-                else{
-                    if(simbolo == 'e')
-                        return 4;
-                    else
-                        return 5;
-                }
-            }
-        }
-    }
-}*/
   },
 }
 </script>
 
 <style scoped>
-
 .container{
   display: flex;
   flex-direction: column;
@@ -147,5 +130,4 @@ export default {
   background-color: rgb(251, 218, 175);
   margin-bottom: 10px;
 }
-
 </style>
