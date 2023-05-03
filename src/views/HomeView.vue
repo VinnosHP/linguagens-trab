@@ -12,7 +12,6 @@
 <script>
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
-import {updateExpressionWithTypeArguments} from 'typescript'
 
 export default {
   name: 'HomeView',
@@ -25,25 +24,23 @@ export default {
       VALID: 'sentença válida:',
       aritimetic:  'operador aritmético',
       sentencaInvalida: 'ERRO => sentença inválida',
-      simbuloInvalido: 'ERRO => símbolo(s) inválido(s)',
+      simboloInvalido: 'ERRO => símbolo(s) inválido(s)',
       aritimeticOperators: ['+','-','/','*'],
-      endSentence: ['$','+','-','/','*'],
+      endSentence: ['$','+','-','/','*',' '],
       tabelaT:[
-        [ 11, 11,  6,  9, 11, 11],
-        [ 11, 11, 11,  9, 11, 11 ],
-        [  3, 11,  0,  7, 11, 11 ],
-        [ 11,  4, 11, 11, 11, 11 ],
-        [  5, 11, 11, 11, 11, 11 ],
-        [ 11,  2, 11, 11, 11, 11 ],
-        [ 11, 11,  0,  7, 11, 11 ],
-        [ 11, 11, 11, 11,  1, 11 ],
-        [ 11, 11, 11,  7, 11, 11 ],
-        [ 11, 11, 11, 11,  8, 11 ],
-        [ 11, 11, 11, 11, 11, 11 ],
+        [ 10, 10,  6,  9, 10, 10 ],
+        [ 10, 10, 10,  9, 10, 10 ],
+        [  3, 10,  0,  7, 10, 10 ],
+        [ 10,  4, 10, 10, 10, 10 ],
+        [  5, 10, 10, 10, 10, 10 ],
+        [ 10,  2, 10, 10, 10, 10 ],
+        [ 10, 10,  0,  7, 10, 10 ],
+        [ 10, 10, 10, 10,  1, 10 ],
+        [ 10, 10, 10,  7, 10, 10 ],
+        [ 10, 10, 10, 10,  8, 10 ],
+        [ 10, 10, 10, 10, 10, 10 ],
       ],
       EF: [1,1,0,0,0,0,0,0,0,0,0],
-
-
     };
   },
   methods:{
@@ -56,7 +53,7 @@ export default {
           sentenca +=  token[i];
         }else{
           sentenca +=  token[i];
-          sentenca+= '$';
+          sentenca += '$';
           sentencas.push(sentenca);
           sentenca = ''; 
         }
@@ -74,7 +71,7 @@ export default {
       return true;
       
     },
-
+    
     main:function(){
       console.clear();
       console.log(this.tabelaT[2][3])
@@ -86,27 +83,41 @@ export default {
       const sentencas = this.getSentencas(token);
       console.log(sentencas);
       
-      for (let i = 0 ; i < sentencas.length ; i++) {
-        if(!this.inAlfhabeth(sentencas[i])){
-          results.value += `ERRO - Simbulo Invalido: ${sentencas[i]}\n`
+      for (const element of sentencas) {
+        if(!this.inAlfhabeth(element)){
+          results.value += `ERRO - Simbolo Invalido: ${element}\n`
         }
-
-
-
-
       }
-
-    
       // console.log(retornos)
-
       // results.value += token
     },
     clear:function(){
       document.getElementById('input').value = '';
       document.getElementById('results').value = '';
     },
+    /*int indiceSimbolo(char simbolo){
+    if(simbolo == 'a')
+        return 0;
+    else{
+        if(simbolo == 'b')
+            return 1;
+        else{
+            if(simbolo == 'c')
+                return 2;
+            else{
+                if(simbolo == 'd')
+                    return 3;
+                else{
+                    if(simbolo == 'e')
+                        return 4;
+                    else
+                        return 5;
+                }
+            }
+        }
+    }
+}*/
   },
-
 }
 </script>
 
@@ -119,10 +130,6 @@ export default {
   align-content: center;
   align-items: center;
   justify-content: center;
-}
-
-.boxButton{
-
 }
 
 #results {
