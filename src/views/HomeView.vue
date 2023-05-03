@@ -28,17 +28,18 @@ export default {
       aritimeticOperators: ['+','-','/','*'],
       controlCharacters: ['$',' '],
       tabelaT:[
-        [ 11, 11,  6,  9, 11, 11],
-        [ 11, 11, 11,  9, 11, 11 ],
-        [  3, 11,  0,  7, 11, 11 ],
-        [ 11,  4, 11, 11, 11, 11 ],
-        [  5, 11, 11, 11, 11, 11 ],
-        [ 11,  2, 11, 11, 11, 11 ],
-        [ 11, 11,  0,  7, 11, 11 ],
-        [ 11, 11, 11, 11,  1, 11 ],
-        [ 11, 11, 11,  7, 11, 11 ],
-        [ 11, 11, 11, 11,  8, 11 ],
-        [ 11, 11, 11, 11, 11, 11 ],
+        // A|  B|  C|  D|  E| Er
+  /* 0*/[ 10, 10,  6,  9, 10, 10 ],
+  /* 1*/[ 10, 10, 10,  9, 10, 10 ],
+  /* 2*/[  3, 10,  0,  7, 10, 10 ],
+  /* 3*/[ 10,  4, 10, 10, 10, 10 ],
+  /* 4*/[  5, 10, 10, 10, 10, 10 ],
+  /* 5*/[ 10,  2, 10, 10, 10, 10 ],
+  /* 6*/[ 10, 10,  0,  7, 10, 10 ],
+  /* 7*/[ 10, 10, 10, 10,  1, 10 ],
+  /* 8*/[ 10, 10, 10,  7, 10, 10 ],
+  /* 9*/[ 10, 10, 10, 10,  8, 10 ],
+  /*10*/[ 10, 10, 10, 10, 10, 10 ],
       ],
       EF: [1,1,0,0,0,0,0,0,0,0,0],
     };
@@ -69,24 +70,10 @@ export default {
       return sentencas;
     },
     inAlfhabeth: function(sentenca){
+      console.log("T sentenca: ",sentenca.length-1);
       for(let i = 0; i < sentenca.length - 1 ; i++  ){
+        //console.log(sentenca[i]);
         if (!this.alfabeto.includes(sentenca[i])) {
-          return false;
-        }
-      }
-      return true;
-    },
-    inAritimeticOperators: function(sentenca){
-      for(let i = 0; i < sentenca.length - 1 ; i++  ){
-        if (!this.aritimeticOperators.includes(sentenca[i])) {
-          return false;
-        }
-      }
-      return true;
-    },
-    inControlCharacters: function(sentenca){
-      for(let i = 0; i < sentenca.length - 1 ; i++  ){
-        if (!this.controlCharacters.includes(sentenca[i])) {
           return false;
         }
       }
@@ -106,8 +93,8 @@ export default {
 
       
       for (const element of sentencas) {
-        console.log(element.length);
-        if(!this.inAlfhabeth(element)){
+        //console.log(element.length);
+        if(this.inAlfhabeth(element)){
           for (let i = 0; i < element.length-1; i++) {
             if(element[i] == '/' || element[i] == '*' || element[i] == '+' || element[i]=='-'){
               results.value += `${this.aritimetic}${element[i]}\n`
@@ -120,16 +107,22 @@ export default {
           }
         }
         else{
-          for (let j = 0; j < element.length-1; j++) {
+          let j=0;
+          console.log("Tamanho: ", element.length);
+          while (element[j] != '$') {
+            console.log("J: ", j)
+            console.log("Estado: ", estado);
+            console.log("Element: ", element[j]);
             let indice = this.indiceSimbolo(element[j]);
             estado = this.tabelaT[estado][indice];
+            j++;
           }
           if (this.EF[estado] == 1) {
-            results.value += `${this.VALID}${element}\n`
+            results.value += `${this.VALID} ${element}\n`;
+          }else{
+            results.value += `${this.sentencaInvalida} ${element}\n`;
           }
-          else{
-            results.value += `${this.sentencaInvalida}${element}\n`
-          }
+          estado = 2;
         }
       }
     
