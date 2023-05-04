@@ -106,6 +106,9 @@ export default {
             }
           }
         }
+
+
+        
         else{
           let j=0;
           console.log("Tamanho: ", element.length);
