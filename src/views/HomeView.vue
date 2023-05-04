@@ -1,16 +1,15 @@
 <template>
   <div class="container">
-    <input id="input" placeholder="digite o codigo aqui: " class="Input">
+    <input id="input" placeholder="digite o codigo aqui: " value="+ccccc dedede t" class="Input">
     <div class="boxButton">
-      <button @click=" this.clear() ">Limpar</button>
-      <button @click=" this.main() ">Analizar</button>
+      <button @click=" this.clear()">Limpar</button>
+      <button @click=" this.main()">Analizar</button>
     </div>
     <textarea name="results" id="results" ></textarea>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
@@ -26,9 +25,11 @@ export default {
       sentencaInvalida: 'ERRO => sentença inválida',
       simbuloInvalido: 'ERRO => símbolo(s) inválido(s)',
       aritimeticOperators: ['+','-','/','*'],
-      controlCharacters: ['$',' '],
+      separadores: ['+','-','/','*','$',' '],
+
+
       tabelaT:[
-        // A|  B|  C|  D|  E| Er
+    //     A|  B|  C|  D|  E| Er
   /* 0*/[ 10, 10,  6,  9, 10, 10 ],
   /* 1*/[ 10, 10, 10,  9, 10, 10 ],
   /* 2*/[  3, 10,  0,  7, 10, 10 ],
@@ -54,91 +55,76 @@ export default {
       else return 5
     },
     getSentencas: function (token){
-
+      console.log(token)
       let sentencas = [];
       let sentenca = '';
+      
       for (let i = 0; i < token.length; i++) {
-        if(!this.controlCharacters.includes(token.charAt(i)) && !this.aritimeticOperators.includes(token.charAt(i))){
-          sentenca +=  token[i];
+        // console.log(token[i])
+        if(this.separadores.includes(token[i])){
+          // if (token[i] !== ' '){
+            console.log('ta no else',token[i]);
+
+            console.log(token[i]);
+            sentenca +=  token[i];
+            // sentenca += '$';
+            sentencas.push(sentenca);
+            sentenca = ''; 
+          // }
         }else{
-          sentenca +=  token[i];
-          sentenca+= '$';
-          sentencas.push(sentenca);
-          sentenca = ''; 
+          sentenca +=  token[i]
         }
       }
       return sentencas;
     },
     inAlfhabeth: function(sentenca){
-      console.log("T sentenca: ",sentenca.length-1);
-      for(let i = 0; i < sentenca.length - 1 ; i++  ){
-        //console.log(sentenca[i]);
+          
+      for(let i = 0; i < sentenca.length - 2 ; i++  ){
         if (!this.alfabeto.includes(sentenca[i])) {
           return false;
         }
       }
       return true;
+      
+    },
+    generic: function(sentencas, results){
+      let estado = 2;
+      for (const element of sentencas) {
+        if(this.inAlfhabeth(element)){
+          let j=0;
+           while (element[j] != '$') {
+             let indice = this.indiceSimbolo(element[j]);
+             estado = this.tabelaT[estado][indice];
+             j++;
+           }
+          if (this.EF[estado] == 1) results.value += `${this.VALID} ${element}\n`;
+          else results.value += `${this.sentencaInvalida} ${element}\n`;
+          estado = 2;
+         }
+         else{
+           for (let i = 0; i < element.length-1; i++) {
+             if (this.aritimeticOperators.includes(element[i]))
+                results.value += `${this.aritimetic} ${element[i]}\n`
+             else{
+                if(element[i] != ' ') results.value += `${this.simbuloInvalido} ${element[i]}\n`
+             }
+           }
+         }
+      }
     },
 
     main:function(){
+    
+
       console.clear();
       const input = document.getElementById('input');
       const results = document.getElementById('results');
       let toke = input.value;
-      let estado = 2;
       
-      const token = toke + "$";
+      const token = toke+"$" ;
       const sentencas = this.getSentencas(token);
       console.log(sentencas);
-
-      
-      for (const element of sentencas) {
-        //console.log(element.length);
-        if(this.inAlfhabeth(element)){
-          for (let i = 0; i < element.length-1; i++) {
-            if(element[i] == '/' || element[i] == '*' || element[i] == '+' || element[i]=='-'){
-              results.value += `${this.aritimetic}${element[i]}\n`
-            }
-            else{
-              if (element[i] != ' ') {
-                results.value += `${this.simbuloInvalido}${element[i]}\n`
-              }
-            }
-          }
-        }
-
-
-        
-        else{
-          let j=0;
-          console.log("Tamanho: ", element.length);
-          while (element[j] != '$') {
-            console.log("J: ", j)
-            console.log("Estado: ", estado);
-            console.log("Element: ", element[j]);
-            let indice = this.indiceSimbolo(element[j]);
-            estado = this.tabelaT[estado][indice];
-            j++;
-          }
-          if (this.EF[estado] == 1) {
-            results.value += `${this.VALID} ${element}\n`;
-          }else{
-            results.value += `${this.sentencaInvalida} ${element}\n`;
-          }
-          estado = 2;
-        }
-      }
-    
-      
-      
-      /*for (const element of sentencas) {
-        if(!this.inAlfhabeth(element)){
-          results.value += `ERRO - Simbolo Invalido: ${element}\n`
-        }
-      }*/
-      // console.log(retornos)
-
-      // results.value += token
+      this.generic(sentencas, results);
     },
     clear:function(){
       document.getElementById('input').value = '';
@@ -174,4 +160,5 @@ export default {
   background-color: rgb(251, 218, 175);
   margin-bottom: 10px;
 }
+
 </style>
